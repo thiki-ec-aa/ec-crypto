@@ -44,14 +44,6 @@ class Crypter {
         val generator = KeyPairGenerator.getInstance("RSA")
         generator.initialize(2048)
         val pair = generator.generateKeyPair()
-
-        println("public.algorithm:" + pair.public.algorithm)
-        println("public.format:" + pair.public.format)
-        println("public.encoded:" + java.lang.String(pair.public.encoded, "UTF-8"))
-        println("private.algorithm:" + pair.private.algorithm)
-        println("private.format:" + pair.private.format)
-        println("private.encoded:" + java.lang.String(pair.private.encoded, "UTF-8"))
-
         writeKeyToFile(publicKeyFile, pair.public.encoded)
         writeKeyToFile(privateKeyFile, pair.private.encoded)
     }

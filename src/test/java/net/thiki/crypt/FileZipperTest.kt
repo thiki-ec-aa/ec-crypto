@@ -11,15 +11,15 @@ class FileZipperTest{
     @Test
     @Disabled("manual test")
     fun testZipFolder(){
-        val cut = FileZipper()
-        cut.zipFolder("bundles.zip", "src/test/resources/bundles", "hello kitty".toCharArray())
+        val cut = FileZipper("bundles.zip", "hello kitty".toCharArray())
+        cut.zipFolder("src/test/resources/bundles")
     }
 
     @Test
     @Disabled("manual test")
     fun testExtractAll(){
-        val cut = FileZipper()
-        cut.extract("bundles.zip", "test", "hello kitty".toCharArray())
+        val cut = FileZipper("bundles.zip", "hello kitty".toCharArray())
+        cut.extractTo("test")
     }
 
 }

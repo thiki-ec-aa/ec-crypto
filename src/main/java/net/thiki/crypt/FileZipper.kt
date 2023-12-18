@@ -6,26 +6,57 @@ import net.lingala.zip4j.model.enums.EncryptionMethod
 import java.io.File
 
 
-class FileZipper {
+class FileZipper(
+    zipFileName: String,
+    passwd: CharArray? = null,
+) {
 
-    private val zipParameters = ZipParameters().apply {
-        isEncryptFiles = true
-        encryptionMethod = EncryptionMethod.AES
+    private val zipFile = ZipFile(zipFileName)
+    private val zipParameters = ZipParameters().also{
+        it.isEncryptFiles = passwd != null && passwd.isNotEmpty()
+        it.encryptionMethod = EncryptionMethod.AES
     }
 
-    fun zipFolder(zipFileName: String, sourceFolder: String, passwd: CharArray){
-        val zipFile = ZipFile(zipFileName, passwd)
+    init {
+        if (passwd != null && passwd.isNotEmpty()) {
+            zipFile.setPassword(passwd)
+        }
+    }
+
+
+    init {
+
+    }
+    fun zipFolder(sourceFolder: String) {
         zipFile.use {
             it.addFolder(File(sourceFolder), zipParameters)
         }
-        passwd.fill('0')
+        terminate()
     }
 
-    fun extract(zipFileName: String, target: String, passwd: CharArray) {
-        val zipFile = ZipFile(zipFileName, passwd)
+    /**
+     * prevents the password extracted from the core-dump file
+     */
+    fun terminate() {
+        zipFile.setPassword(null)
+    }
+
+    /**
+     * zip files
+     */
+    fun zipFiles(vararg sourceFiles: String){
+        zipFile.use {
+            sourceFiles.forEach { file ->
+                zipFile.addFile(File(file), zipParameters)
+            }
+        }
+        terminate()
+    }
+
+    fun extractTo(target: String) {
         zipFile.use {
             it.extractAll(target)
         }
-        passwd.fill('0')
+        terminate()
     }
 }
