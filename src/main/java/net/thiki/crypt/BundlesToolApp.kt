@@ -18,7 +18,7 @@ fun main(args: Array<String>) : Unit = exitProcess(CommandLine(BundlesToolApp())
 )
 class BundlesToolApp: Callable<Int> {
 
-    @CommandLine.Parameters(index = "0", description = ["commands: init-keys, encrypt, decrypt, help"])
+    @CommandLine.Parameters(index = "0", description = ["init-keys, encrypt, decrypt, help"])
     var command: String = ""
 
     override fun call(): Int {

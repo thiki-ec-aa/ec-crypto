@@ -19,7 +19,7 @@
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <zip4j.version>2.9.0</zip4j.version>
 
-<!--        <spring-boot-maven-plugin.version>3.1.4</spring-boot-maven-plugin.version>-->
+        <spring-boot-maven-plugin.version>2.7.12</spring-boot-maven-plugin.version>
 <!--        <bcprov-jdk18on.version>1.77</bcprov-jdk18on.version>-->
     </properties>
     <dependencies>
@@ -109,27 +109,27 @@
                     <argLine>-Dfile.encoding=UTF-8</argLine>
                 </configuration>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--                <version>${spring-boot-maven-plugin.version}</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>repackage</id>-->
-<!--                        <goals>-->
-<!--                            <goal>repackage</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <finalName>hawkeye</finalName>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--                <configuration>-->
-<!--                    <mainClass>net.thiki.crypt.BundelsToolApp</mainClass>-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>crypter</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>net.thiki.crypt.BundlesToolAppKt</mainClass>
 <!--                    <embeddedLaunchScript>src/embeddedLaunchScript.sh</embeddedLaunchScript>-->
-<!--                    <executable>true</executable>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+                    <executable>true</executable>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
