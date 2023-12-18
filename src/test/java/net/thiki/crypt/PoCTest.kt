@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets
 import java.security.KeyPairGenerator
 import java.time.Instant
 import java.util.*
-import javax.crypto.Cipher
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -51,7 +50,7 @@ class PoCTest{
     }
 
     @Test
-    fun testEncryptAndDecrypt() {
+    fun testFile(){
 
         // init the key pair
         val generator = KeyPairGenerator.getInstance("RSA")
@@ -67,38 +66,38 @@ class PoCTest{
 
         FileOutputStream("public.key").use { fos -> fos.write(pair.public.encoded) }
         FileOutputStream("private.key").use { fos -> fos.write(pair.private.encoded) }
+        val cut = Crypter()
+        val publicKeyInFile = cut.readKeyFromFile("public.key")
+        assertEquals(pair.public.encoded.toList(), publicKeyInFile.encoded.toList())
+        val privateKeyInFile = cut.readKeyFromFile("private.key", false)
+        assertEquals(pair.private.encoded.toList(), privateKeyInFile.encoded.toList())
+    }
+    @Test
+    fun testInitKeys() {
+        val cut = Crypter()
+        cut.initKeys()
+    }
+
+    @Test
+    fun testEncryptAndDecrypt() {
+
+        val cut = Crypter()
+        // init the key pair
+//        cut.initKeys()
 
         //encrypt
-        val publ = pair.public
-
         val r = java.security.SecureRandom()
         val l = r.nextLong()
         val t = Instant.now().toEpochMilli()
-        val token: String = "$l-$t"
-
-
+        val token: String = "$l:$t"
         println("token:$token")
-        val encryptCipher = Cipher.getInstance("RSA")
-        encryptCipher.init(Cipher.ENCRYPT_MODE, publ)
-        val encryptedBA = encryptCipher.doFinal(token.toByteArray(StandardCharsets.UTF_8))
 
-        val encodedMessage: String = Base64.getEncoder().encodeToString(encryptedBA)
-        //save and send the encodedMessage
+        val encodedMessage = cut.encrypt(token, "public.key")
         println("encodedMessage:$encodedMessage")
 
-
         // decrypt
-        val priv = pair.private
-
-        val decodedBA = Base64.getDecoder().decode(encodedMessage)
-        assertEquals(encryptedBA.toList(), decodedBA.toList())
-
-        val decryptCipher = Cipher.getInstance("RSA")
-        decryptCipher.init(Cipher.DECRYPT_MODE, priv)
-        val decryptedMsg = decryptCipher.doFinal(decodedBA).toString(StandardCharsets.UTF_8)
-
-        val split = decryptedMsg.split("-")
-
+        val decryptedMsg = cut.decrypt(encodedMessage, "private.key")
+        val split = decryptedMsg.split(":")
         assertEquals(2, split.size)
         assertEquals(l, split[0].toLong())
         assertEquals(t, split[1].toLong())
@@ -110,7 +109,7 @@ class PoCTest{
         val r = java.security.SecureRandom()
         val l = r.nextLong()
         val t = Instant.now().toEpochMilli()
-        val token: String = "$l-$t"
+        val token: String = "$l:$t"
 
         println("token:$token")
         val tokenBA = token.toByteArray(StandardCharsets.UTF_8)
