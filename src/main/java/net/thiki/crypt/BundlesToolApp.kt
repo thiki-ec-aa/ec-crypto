@@ -1,7 +1,10 @@
 package net.thiki.crypt
 
+import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.nio.charset.StandardCharsets
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
 
@@ -73,12 +76,32 @@ class BundlesToolApp: Callable<Int> {
 
     }
 
+    /**
+     * needs [privateKeyFile], [zipFileName] and [target]
+     */
+    @CommandLine.Option(names = ["--target"], description = ["bundle folder name"])
+    var target: String = ""
     private fun decrypt() {
-        TODO("Not yet implemented")
+
+        FileZipper("bd-$zipFileName").extractTo(target)
+        val bytes = FileInputStream("$target/token.txt").use { fis -> fis.readBytes() }
+        val crypter = Crypter()
+        val token = crypter.decrypt(bytes.toString(StandardCharsets.UTF_8), privateKeyFile)
+        val (l, t) = token.split(":").let {
+            Pair(
+                it[0],
+                it[1].toLong()
+            )
+        }
+        if (Instant.ofEpochMilli(t).isBefore(Instant.now().minus(1, ChronoUnit.HOURS))) {
+            // token is expired
+            throw IllegalArgumentException("token is expired")
+        }
+        FileZipper("$target/$zipFileName", l.toCharArray()).extractTo(target)
     }
 
     private fun help() {
-        CommandLine.usage(BundlesToolApp(), System.out)
+        CommandLine.usage(this, System.out)
     }
 
 

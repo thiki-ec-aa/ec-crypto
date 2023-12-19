@@ -3,6 +3,8 @@ package net.thiki.crypt
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
 import net.lingala.zip4j.model.enums.EncryptionMethod
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 
 
@@ -18,6 +20,7 @@ class FileZipper(
     }
 
     init {
+        logger.info("Zip file name: $zipFileName")
         if (passwd != null && passwd.isNotEmpty()) {
             zipFile.setPassword(passwd)
         }
@@ -59,4 +62,8 @@ class FileZipper(
         }
         terminate()
     }
+    companion object{
+        private val logger: Logger = LoggerFactory.getLogger(FileZipper::class.java)
+    }
+
 }

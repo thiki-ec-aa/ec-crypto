@@ -18,6 +18,7 @@
         <junit-jupiter-engine.version>5.10.0</junit-jupiter-engine.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <zip4j.version>2.9.0</zip4j.version>
+        <log4j2.version>2.17.1</log4j2.version>
 
         <spring-boot-maven-plugin.version>2.7.12</spring-boot-maven-plugin.version>
 <!--        <bcprov-jdk18on.version>1.77</bcprov-jdk18on.version>-->
@@ -38,6 +39,24 @@
             <artifactId>kotlin-stdlib-jdk8</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
+
+        <!-- log4j2 supports-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test</artifactId>
@@ -58,6 +77,7 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>crypter</finalName>
         <plugins>
             <plugin>
                 <!-- see https://kotlinlang.org/docs/maven.html -->
@@ -109,6 +129,45 @@
                     <argLine>-Dfile.encoding=UTF-8</argLine>
                 </configuration>
             </plugin>
+
+            <!-- obfuscate the jar -->
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.6.0</version>
+                <executions>
+                    <!-- 以下配置说明执行mvn的package命令时候，会执行proguard-->
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <injar>${project.build.finalName}.jar</injar>
+                    <!-- overwrite -->
+                    <outjar>${project.build.finalName}.jar</outjar>
+                    <obfuscate>true</obfuscate>
+                    <!-- 配置一个文件，通常叫做proguard.cfg,该文件主要是配置options选项，也就是说使用proguard.cfg那么options下的所有内容都可以移到proguard.cfg中 -->
+                    <proguardInclude>${project.basedir}/src/proguard.cfg</proguardInclude>
+                    <!-- 额外的jar包，通常是项目编译所需要的jar -->
+                    <libs>
+                        <lib>${java.home}/lib/rt.jar</lib>
+                        <lib>${java.home}/lib/jce.jar</lib>
+                        <lib>${java.home}/lib/jsse.jar</lib>
+                    </libs>
+                    <!-- 对输入jar进行过滤比如，如下配置就是对META-INFO文件不处理。 -->
+                    <inLibsFilter>!META-INF/**,!META-INF/versions/9/**.class</inLibsFilter>
+                    <!-- 这是输出路径配置，但是要注意这个路径必须要包括injar标签填写的jar -->
+                    <outputDirectory>${project.basedir}/target</outputDirectory>
+                    <!--这里特别重要，此处主要是配置混淆的一些细节选项，比如哪些类不需要混淆，哪些需要混淆-->
+                    <options>
+                        <!-- 可以在此处写option标签配置，不过我上面使用了proguardInclude，故而我更喜欢在proguard.cfg中配置 -->
+                    </options>
+                </configuration>
+            </plugin>
+            <!--  -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -116,20 +175,44 @@
                 <executions>
                     <execution>
                         <id>repackage</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <finalName>crypter</finalName>
+                            <finalName>${project.build.finalName}-boot</finalName>
                         </configuration>
                     </execution>
                 </executions>
                 <configuration>
                     <mainClass>net.thiki.crypt.BundlesToolAppKt</mainClass>
-<!--                    <embeddedLaunchScript>src/embeddedLaunchScript.sh</embeddedLaunchScript>-->
+                    <!--                    <embeddedLaunchScript>src/embeddedLaunchScript.sh</embeddedLaunchScript>-->
                     <executable>true</executable>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assembly/assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <finalName>${project.build.finalName}-dist</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
