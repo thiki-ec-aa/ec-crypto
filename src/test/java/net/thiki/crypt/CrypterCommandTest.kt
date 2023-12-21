@@ -10,17 +10,17 @@ import java.time.Instant
 import kotlin.io.path.pathString
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CrypterAppTest {
+class CrypterCommandTest {
     @Test
     fun `show help`(){
-        val cutCommand = CommandLine(CrypterApp())
+        val cutCommand = CommandLine(CrypterCommand())
         val exitCode = cutCommand.execute("init-keys", "--help")
         assertEquals(0, exitCode)
     }
 
     @Test
     fun `test no command specified`(){
-        val cutCommand = CommandLine(CrypterApp())
+        val cutCommand = CommandLine(CrypterCommand())
         val exitCode = cutCommand.execute()
         assertEquals(-1, exitCode)
     }
@@ -28,7 +28,7 @@ class CrypterAppTest {
     @Test
     @Disabled("manual test")
     fun `test init-keys command`(){
-        val cutCommand = CommandLine(CrypterApp())
+        val cutCommand = CommandLine(CrypterCommand())
         val exitCode = cutCommand.execute(
             "init-keys",
             "-pu=target/test/public.key",
@@ -46,7 +46,7 @@ class CrypterAppTest {
     @Test
     @Disabled("manual test")
     fun `test encrypt command`(){
-        val cutCommand = CommandLine(CrypterApp())
+        val cutCommand = CommandLine(CrypterCommand())
         val exitCode = cutCommand.execute(
             "encrypt",
             "-pu=target/test/public.key",
@@ -95,7 +95,7 @@ class CrypterAppTest {
     @Test
     @Disabled("manual test")
     fun `test decrypt command`(){
-        val cutCommand = CommandLine(CrypterApp())
+        val cutCommand = CommandLine(CrypterCommand())
         val exitCode = cutCommand.execute(
             "decrypt",
             "--target=target/test/extracted-bundles",
