@@ -11,6 +11,12 @@ import kotlin.io.path.pathString
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CrypterAppTest {
+    @Test
+    fun `show help`(){
+        val cutCommand = CommandLine(CrypterApp())
+        val exitCode = cutCommand.execute("init-keys", "--help")
+        assertEquals(0, exitCode)
+    }
 
     @Test
     fun `test no command specified`(){

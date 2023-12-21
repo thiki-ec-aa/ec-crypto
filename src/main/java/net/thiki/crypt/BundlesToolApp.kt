@@ -11,7 +11,7 @@ import kotlin.system.exitProcess
 fun main(args: Array<String>) : Unit = exitProcess(CommandLine(BundlesToolApp()).execute(*args))
 
 /**
- *
+ * @deprecated Use [net.thiki.crypt.CrypterApp] instead
  */
 @CommandLine.Command(
     name = "BundlesToolApp",

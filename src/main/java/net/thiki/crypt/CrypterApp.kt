@@ -47,8 +47,7 @@ class CrypterApp : Callable<Int> {
     }
 
 }
-@CommandLine.Command(name = "init-keys", description = ["initial the key pair."])
-
+@CommandLine.Command(name = "init-keys", description = ["initial the key pair."], mixinStandardHelpOptions = true )
 class InitKeysCommand : Callable<Int> {
     @CommandLine.Option(names = ["--public-key", "-pu"], description = ["public key file"])
     lateinit var publicKeyFile: String
@@ -66,7 +65,7 @@ class InitKeysCommand : Callable<Int> {
     }
 }
 
-@CommandLine.Command(name = "encrypt", description = ["zip and encrypt the folder into zip file."])
+@CommandLine.Command(name = "encrypt", description = ["zip and encrypt the folder into zip file."], mixinStandardHelpOptions = true )
 class EncryptCommand : Callable<Int> {
 
     @CommandLine.Option(names = ["--public-key", "-pu"], description = ["public key file"])
@@ -107,7 +106,7 @@ class EncryptCommand : Callable<Int> {
     }
 }
 
-@CommandLine.Command(name = "decrypt", description = ["decrypt the zip file."])
+@CommandLine.Command(name = "decrypt", description = ["decrypt the zip file."], mixinStandardHelpOptions = true )
 class DecryptCommand : Callable<Int> {
     @CommandLine.Option(names = ["--target"], description = ["bundle folder name"])
     lateinit var target: String

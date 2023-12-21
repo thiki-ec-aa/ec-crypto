@@ -185,7 +185,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>net.thiki.crypt.BundlesToolAppKt</mainClass>
+                    <mainClass>net.thiki.crypt.CrypterAppKt</mainClass>
                     <!--                    <embeddedLaunchScript>src/embeddedLaunchScript.sh</embeddedLaunchScript>-->
                     <executable>true</executable>
                 </configuration>
