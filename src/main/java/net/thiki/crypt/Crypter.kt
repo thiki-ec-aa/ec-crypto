@@ -1,9 +1,11 @@
 package net.thiki.crypt
 
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
+import java.nio.file.Paths
 import java.security.Key
 import java.security.KeyFactory
 import java.security.KeyPairGenerator
@@ -12,6 +14,7 @@ import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 import java.util.*
 import javax.crypto.Cipher
+import kotlin.io.path.pathString
 
 
 class Crypter {
@@ -26,7 +29,7 @@ class Crypter {
     fun readKeyFromFile(path: String, isPublicKey: Boolean = true): Key {
         val keyFile = File(path)
         if (!keyFile.exists()) {
-            throw RuntimeException("public key file not found")
+            throw RuntimeException("key file not found, path=$keyFile")
         }
         val keyBytes = Files.readAllBytes(keyFile.toPath())
         val keyFactory = KeyFactory.getInstance("RSA")
@@ -39,17 +42,31 @@ class Crypter {
         }
     }
 
-    fun initKeys(publicKeyFile: String = "public.key", privateKeyFile: String = "private.key") {
+    fun initKeys(
+        publicKeyFile: String = "public.key",
+        privateKeyFile: String = "private.key",
+        password: CharArray? = null,
+    ) {
         // init the key pair
         val generator = KeyPairGenerator.getInstance("RSA")
         generator.initialize(2048)
         val pair = generator.generateKeyPair()
         writeKeyToFile(publicKeyFile, pair.public.encoded)
         writeKeyToFile(privateKeyFile, pair.private.encoded)
+
+        if (password != null && password.isNotEmpty()) {
+            FileZipper("${privateKeyFile}.zip", password).zipFiles(privateKeyFile)
+            File(privateKeyFile).delete()
+        }
     }
 
-    fun writeKeyToFile(path: String, keyEncoded: ByteArray ) {
-        FileOutputStream(path).use { fos -> fos.write(keyEncoded) }
+    fun writeKeyToFile(fileName: String, keyEncoded: ByteArray ) {
+        val path = Paths.get(fileName)
+        val parent = path.parent.toFile()
+        if (!parent.exists()){
+            parent.mkdirs()
+        }
+        FileOutputStream(fileName).use { fos -> fos.write(keyEncoded) }
     }
 
     /**
@@ -66,15 +83,36 @@ class Crypter {
         return encodedMessage
     }
 
-    fun decrypt(encodedMessage: String, keyFile: String): String {
+    fun decrypt(encodedMessage: String, keyFile: String, password: CharArray? = null): String {
         val decryptCipher = Cipher.getInstance("RSA")
-        val key = readKeyFromFile(keyFile, false)
+        var realKeyFile = keyFile
+        if (keyFile.endsWith(".zip")){
+            // extract the key file
+            if (password != null && password.isNotEmpty()){
+                realKeyFile = keyFile.substring(0, keyFile.length - ".zip".length)
+                val path = Paths.get(realKeyFile)
+                val parentPath = path.parent.pathString
+                val fileName = path.fileName.pathString
+                logger.info("keyFile: $keyFile, fileName: $fileName, parentPath: $parentPath")
+                FileZipper(keyFile, password).extractFile(fileName, parentPath)
+            }else{
+                throw IllegalArgumentException("zip key file must input the password.")
+            }
+        }
+
+        val key = readKeyFromFile(realKeyFile, false)
         decryptCipher.init(Cipher.DECRYPT_MODE, key)
 
         val decodedBA = Base64.getDecoder().decode(encodedMessage)
         val decryptedMsg = decryptCipher.doFinal(decodedBA).toString(StandardCharsets.UTF_8)
+
+        if (keyFile.endsWith(".zip")){
+            //delete the raw key file.
+            File(realKeyFile).delete()
+        }
         return decryptedMsg
-
-
+    }
+    companion object {
+        private val logger = LoggerFactory.getLogger(DecryptCommand::class.java)
     }
 }

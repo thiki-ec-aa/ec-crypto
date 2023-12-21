@@ -56,6 +56,12 @@ class FileZipper(
         terminate()
     }
 
+    fun extractFile(file: String, target: String) {
+        zipFile.use {
+            it.extractFile(file, target)
+        }
+        terminate()
+    }
     fun extractTo(target: String) {
         zipFile.use {
             it.extractAll(target)

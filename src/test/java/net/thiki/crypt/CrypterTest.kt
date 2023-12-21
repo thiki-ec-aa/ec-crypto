@@ -10,11 +10,12 @@ import java.time.Instant
 @Disabled("manual test")
 class CrypterTest{
 
+    private val keyPassword = "hello-kitty".toCharArray()
 
     @Test
     fun testInitKeys() {
         val cut = Crypter()
-        cut.initKeys()
+        cut.initKeys(password = keyPassword)
     }
 
     @Test
@@ -35,7 +36,7 @@ class CrypterTest{
         println("encodedMessage:$encodedMessage")
 
         // decrypt
-        val decryptedMsg = cut.decrypt(encodedMessage, "private.key")
+        val decryptedMsg = cut.decrypt(encodedMessage, "private.key", keyPassword)
         val split = decryptedMsg.split(":")
         assertEquals(2, split.size)
         assertEquals(l, split[0].toLong())

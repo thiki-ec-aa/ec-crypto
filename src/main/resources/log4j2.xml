@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<Configuration status="TRACE" monitorInterval="600">-->
+<Configuration status="INFO" monitorInterval="600">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+<!--            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%l] - %msg%n" />-->
+            <PatternLayout pattern="%-5level (%l) - %msg%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="net.thiki" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console" />
+        </Logger>
+        <Root level="INFO">
+            <AppenderRef ref="Console" />
+        </Root>
+    </Loggers>
+</Configuration>

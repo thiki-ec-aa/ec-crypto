@@ -22,7 +22,7 @@ fun main(args: Array<String>) : Unit = exitProcess(CommandLine(BundlesToolApp())
 class BundlesToolApp: Callable<Int> {
 
     @CommandLine.Parameters(index = "0", description = ["init-keys, encrypt, decrypt, help"])
-    var command: String = ""
+    lateinit var command: String
 
     override fun call(): Int {
         when(command) {
@@ -37,25 +37,25 @@ class BundlesToolApp: Callable<Int> {
 
 
     @CommandLine.Option(names = ["--public-key-file"], description = ["public key file"])
-    var publicKeyFile: String = ""
+    lateinit var publicKeyFile: String
 
     @CommandLine.Option(names = ["--private-key-file"], description = ["private key file"])
-    var privateKeyFile: String = ""
+    lateinit var privateKeyFile: String
 
     /**
      * needs [publicKeyFile] and [privateKeyFile]
      */
     private fun initKeys() {
         val crypter = Crypter()
-        crypter.initKeys(publicKeyFile, privateKeyFile)
+        crypter.initKeys(publicKeyFile, privateKeyFile, password)
     }
 
 
     @CommandLine.Option(names = ["--zip-file-name"], description = ["zip file name"])
-    var zipFileName: String = ""
+    lateinit var zipFileName: String
 
     @CommandLine.Option(names = ["--bundle-folder-name"], description = ["bundle folder name"])
-    var bundleFolderPath: String = ""
+    lateinit var bundleFolderPath: String
 
     /**
      * needs [publicKeyFile], [zipFileName] and [bundleFolderPath]
@@ -80,13 +80,16 @@ class BundlesToolApp: Callable<Int> {
      * needs [privateKeyFile], [zipFileName] and [target]
      */
     @CommandLine.Option(names = ["--target"], description = ["bundle folder name"])
-    var target: String = ""
+    lateinit var target: String
+
+    @CommandLine.Option(names = ["--password"], arity = "0..1", interactive = true)
+    lateinit var password: CharArray
     private fun decrypt() {
 
         FileZipper("bd-$zipFileName").extractTo(target)
         val bytes = FileInputStream("$target/token.txt").use { fis -> fis.readBytes() }
         val crypter = Crypter()
-        val token = crypter.decrypt(bytes.toString(StandardCharsets.UTF_8), privateKeyFile)
+        val token = crypter.decrypt(bytes.toString(StandardCharsets.UTF_8), privateKeyFile, password)
         val (l, t) = token.split(":").let {
             Pair(
                 it[0],

@@ -10,11 +10,11 @@ class BundlesToolAppTest{
 
     @Test
     fun testDecrypt() {
-        main(arrayOf(
+        CommandLine(BundlesToolApp()).execute(
             "--private-key-file=private.key",
             "--zip-file-name=bundles.zip",
             "--target=bundles",
             "decrypt"
-        ))
+        )
     }
 }
