@@ -91,7 +91,12 @@ class Crypter {
             if (password != null && password.isNotEmpty()){
                 realKeyFile = keyFile.substring(0, keyFile.length - ".zip".length)
                 val path = Paths.get(realKeyFile)
-                val parentPath = path.parent.pathString
+                val parentPath =
+                    if (path.parent != null && path.parent.toFile().exists()){
+                        path.parent.pathString
+                    }else{
+                        "."
+                    }
                 val fileName = path.fileName.pathString
                 logger.info("keyFile: $keyFile, fileName: $fileName, parentPath: $parentPath")
                 FileZipper(keyFile, password).extractFile(fileName, parentPath)
