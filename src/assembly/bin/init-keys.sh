@@ -1,5 +1,12 @@
 #!/usr/bin/bash
 set -x
-java -jar crypter-boot.jar --public-key-file=public.key --private-key-file=private.key init-keys
+
+base=$(cd $(dirname $0);pwd)
+source "$base"/alias-jar.sh
+
+crypter init-keys \
+            -pu=public.key \
+            -pr=private.key
+#            --password=hellokitty
 set +x
 

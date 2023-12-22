@@ -24,8 +24,7 @@ class CrypterCommandTest {
         val exitCode = cutCommand.execute()
         assertEquals(-1, exitCode)
     }
-
-    @Test
+        @Test
     @Disabled("manual test")
     fun `test init-keys command`(){
         val cutCommand = CommandLine(CrypterCommand())

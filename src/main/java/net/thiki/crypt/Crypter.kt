@@ -62,9 +62,9 @@ class Crypter {
 
     fun writeKeyToFile(fileName: String, keyEncoded: ByteArray ) {
         val path = Paths.get(fileName)
-        val parent = path.parent.toFile()
-        if (!parent.exists()){
-            parent.mkdirs()
+        val parent = path.parent
+        if (parent != null && !parent.toFile().exists()){
+            parent.toFile().mkdirs()
         }
         FileOutputStream(fileName).use { fos -> fos.write(keyEncoded) }
     }

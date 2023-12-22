@@ -53,7 +53,13 @@ class InitKeysCommand : Callable<Int> {
     @CommandLine.Option(names = ["--private-key", "-pr"], description = ["private key file"])
     lateinit var privateKeyFile: String
 
-    @CommandLine.Option(names = ["--password"], arity = "0..1", interactive = true, defaultValue = "", description = ["password to encrypt the private key file"])
+    @CommandLine.Option(
+        names = ["--password"],
+        arity = "0..1",
+        interactive = true,
+        defaultValue = "",
+        description = ["password to encrypt the private key file"]
+    )
     lateinit var password: CharArray
 
     override fun call(): Int {
