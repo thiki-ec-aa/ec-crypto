@@ -6,7 +6,7 @@ source "$base"/alias-jar.sh
 
 crypter init-keys \
             -pu=public.key \
-            -pr=private.key
-#            --password=hellokitty
+            -pr=private.key \
+            --password
 set +x
 

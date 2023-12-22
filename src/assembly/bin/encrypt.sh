@@ -10,7 +10,7 @@ zipfile=xc-v1.1.4-$datestr.zip
 crypter encrypt \
             -pu=$keyfile \
             --zip-file=$zipfile \
-            --bundle-folder=$datestr
+            --bundle-folder=$datestr \
 
 set +x
 
