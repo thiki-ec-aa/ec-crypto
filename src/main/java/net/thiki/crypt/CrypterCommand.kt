@@ -37,6 +37,7 @@ class CrypterCommand : Callable<Int> {
     }
     override fun call(): Int {
         logger.warn("must specify command: init-keys, encrypt, decrypt")
+        CommandLine(this).usage(System.out)
         return -1
     }
 
