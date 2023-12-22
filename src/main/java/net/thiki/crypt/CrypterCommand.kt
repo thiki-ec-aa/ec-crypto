@@ -48,10 +48,18 @@ class CrypterCommand : Callable<Int> {
 }
 @CommandLine.Command(name = "init-keys", description = ["initial the key pair."], mixinStandardHelpOptions = true )
 class InitKeysCommand : Callable<Int> {
-    @CommandLine.Option(names = ["--public-key", "-pu"], description = ["public key file"])
+    @CommandLine.Option(
+        names = ["--public-key", "-pu"],
+        defaultValue = "public.key",
+        description = ["public key file"]
+    )
     lateinit var publicKeyFile: String
 
-    @CommandLine.Option(names = ["--private-key", "-pr"], description = ["private key file"])
+    @CommandLine.Option(
+        names = ["--private-key", "-pr"],
+        defaultValue = "private.key",
+        description = ["private key file"]
+    )
     lateinit var privateKeyFile: String
 
     @CommandLine.Option(
