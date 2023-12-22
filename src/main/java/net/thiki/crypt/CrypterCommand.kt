@@ -106,7 +106,11 @@ class EncryptCommand : Callable<Int> {
      */
     fun outerZipFileName(zipFileName: String, prefix: String): String {
         val path = Paths.get(zipFileName)
-        return path.parent.pathString + "/" + prefix + path.fileName
+        if (path.parent != null && path.parent.toFile().exists()){
+            return path.parent.pathString + "/" + prefix + path.fileName
+        }else{
+            return prefix + path.fileName
+        }
     }
 }
 
@@ -131,6 +135,7 @@ class DecryptCommand : Callable<Int> {
      */
     fun innerZipFileName(zipFileName: String, prefix: String): String {
         val path = Paths.get(zipFileName)
+
         //bd-bundles.zip -> bundles.zip
         return path.fileName.pathString.substring(prefix.length)
     }

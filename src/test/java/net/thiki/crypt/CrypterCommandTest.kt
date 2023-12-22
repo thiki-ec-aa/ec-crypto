@@ -58,11 +58,28 @@ class CrypterCommandTest {
 
 
     @Test
-    fun `test encrypt command outerZipFileName`(){
+    fun `test encrypt command outerZipFileName with parent`(){
         val outerZipFileName = EncryptCommand().outerZipFileName("target/xxx.zip", "bd-")
         assertEquals("target/bd-xxx.zip", outerZipFileName)
     }
 
+    @Test
+    fun `test encrypt command outerZipFileName without parent`(){
+        val outerZipFileName = EncryptCommand().outerZipFileName("xxx.zip", "bd-")
+        assertEquals("bd-xxx.zip", outerZipFileName)
+    }
+
+    @Test
+    fun `test decrypt command innerZipFileName with parent`(){
+        val innerZipFileName = DecryptCommand().innerZipFileName("target/bd-xxx.zip", "bd-")
+        assertEquals("xxx.zip", innerZipFileName)
+    }
+
+    @Test
+    fun `test decrypt command innerZipFileName without parent`(){
+        val innerZipFileName = DecryptCommand().innerZipFileName("bd-xxx.zip", "bd-")
+        assertEquals("xxx.zip", innerZipFileName)
+    }
     @Test
     fun `test file's parent not exist`(){
         val file = Paths.get("target/not-exist-${Instant.now().toEpochMilli()}/aFile")
