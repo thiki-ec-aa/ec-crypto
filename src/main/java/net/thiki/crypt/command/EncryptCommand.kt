@@ -1,5 +1,8 @@
-package net.thiki.crypt
+package net.thiki.crypt.command
 
+import net.thiki.crypt.CommandLine
+import net.thiki.crypt.Crypter
+import net.thiki.crypt.FileZipper
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.file.Paths

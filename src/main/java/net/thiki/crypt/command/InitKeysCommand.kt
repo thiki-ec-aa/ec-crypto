@@ -1,5 +1,7 @@
-package net.thiki.crypt
+package net.thiki.crypt.command
 
+import net.thiki.crypt.CommandLine
+import net.thiki.crypt.Crypter
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "init-keys", description = ["initial the key pair."], mixinStandardHelpOptions = true )

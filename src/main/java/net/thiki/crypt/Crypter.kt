@@ -1,5 +1,6 @@
 package net.thiki.crypt
 
+import net.thiki.crypt.command.DecryptCommand
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileOutputStream

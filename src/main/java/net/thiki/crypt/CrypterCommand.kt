@@ -1,5 +1,9 @@
 package net.thiki.crypt
 
+import net.thiki.crypt.command.DecryptCommand
+import net.thiki.crypt.command.EncryptCommand
+import net.thiki.crypt.command.InitKeysCommand
+import net.thiki.crypt.command.UnzipCommand
 import org.slf4j.LoggerFactory
 import java.util.concurrent.Callable
 

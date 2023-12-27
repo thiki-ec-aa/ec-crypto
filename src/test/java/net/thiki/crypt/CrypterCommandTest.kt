@@ -1,5 +1,7 @@
 package net.thiki.crypt
 
+import net.thiki.crypt.command.DecryptCommand
+import net.thiki.crypt.command.EncryptCommand
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
