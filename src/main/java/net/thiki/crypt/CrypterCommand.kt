@@ -16,6 +16,7 @@ import java.util.concurrent.Callable
         EncryptCommand::class,
         DecryptCommand::class,
         InitKeysCommand::class,
+        UnzipCommand::class,
     ]
 
 )
