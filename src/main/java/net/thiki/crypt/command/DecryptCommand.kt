@@ -54,7 +54,7 @@ class DecryptCommand : Callable<Int> {
                 it[1].toLong()
             )
         }
-        if (Instant.ofEpochMilli(t).isBefore(Instant.now().minus(1, ChronoUnit.HOURS))) {
+        if (Instant.ofEpochMilli(t).isBefore(Instant.now().minus(2, ChronoUnit.HOURS))) {
             // token is expired
             throw IllegalArgumentException("token is expired")
         }
