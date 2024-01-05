@@ -1,10 +1,10 @@
 #!/usr/bin/bash
 set -x
 
-base=$(cd $(dirname $0);pwd)
-source "$base"/alias-jar.sh
+source ~/.crypter/crypter-function.sh
 
-keyfile=hxlc-xc.key
+# select the key file
+keyfile=private.key.zip
 datestr=$1
 zipfile=xc-v1.1.4-$datestr.zip
 
