@@ -7,7 +7,7 @@ if [ "$1" = '' ] ;then
     echo "need parameter to specify crypter install parent directory."
     exit 1
 fi
-jar_name=crypter.jar
+jar_name=crypter-boot.jar
 install_root=$base/.crypter
 
 if [ ! -d "$install_root"  ] ; then

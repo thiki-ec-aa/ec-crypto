@@ -1,19 +1,25 @@
 #!/usr/bin/bash
 
-## install crypter in bash
+set +x
+cd $(dirname $0)
 
-if [ "$1" = '-f' ] ;then
-  rm ~/.crypter -rf
+## install crypter in bash
+base=$1
+jar_name=crypter-boot.jar
+install_root=$base/.crypter
+
+if [ "$2" = '-f' ] ;then
+  rm $base/.crypter -rf
 else
-  if [ -d ~/.crypter ]; then
-    echo "The directory '~/.crypter' exists. If you want to reinstall crypter, please remove '~/.crypter' first."
+  if [ -d ${install_root} ]; then
+    echo "The directory [${install_root}] exists. If you want to reinstall crypter, please remove [${install_root}] first."
     exit 1
   fi
 fi
 
-mkdir ~/.crypter
-cp ../crypter-boot.jar ~/.crypter/
-cp ./crypter-function.sh ~/.crypter/
+mkdir ${install_root}
+cp ../${jar_name} ${install_root}/
+cp ./crypter-function.sh ${install_root}/
 
 cat << EOT >> ~/.bashrc
 crypter()
@@ -22,4 +28,6 @@ crypter()
 }
 EOT
 
-echo crypter installed. please run 'source ~/.bashrc' to take effect.
+echo crypter installed. please run 'source ~/.bashrc' to take effect, and run 'crypter -h' to verify.
+
+set -x
