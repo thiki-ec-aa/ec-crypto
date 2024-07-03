@@ -48,6 +48,10 @@ class CrypterCommandTest {
     @Disabled("manual test")
     fun `test encrypt command`(){
         val cutCommand = CommandLine(CrypterCommand())
+        /*
+          crypter encrypt -pu="$public_key_file" --zip-file="$bundles_root/$inner_zip_file_name" \
+           --bundle-folder="$workspace_home/$datestr"
+         */
         val exitCode = cutCommand.execute(
             "encrypt",
             "-pu=target/test/public.key",
@@ -114,6 +118,10 @@ class CrypterCommandTest {
     @Disabled("manual test")
     fun `test decrypt command`(){
         val cutCommand = CommandLine(CrypterCommand())
+        /*
+         crypter decrypt -pr="target/test/private.key.zip" --zip-file="target/test/bd-bundles.zip" \
+          --target="$workspace_home/$datestr"
+         */
         val exitCode = cutCommand.execute(
             "decrypt",
             "--target=target/test/extracted-bundles",
